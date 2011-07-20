@@ -1,0 +1,29 @@
+#
+# Configuration for TrunkBot
+#
+
+# Primary Settings
+$conf = {
+  :dir => {
+    :root => "/path/to/trunkbot/"
+  }
+}
+
+# IRC Settings
+$conf[:irc] = {
+  :host => "irc.host.net",
+  :nick => "bot_name",
+  :pass => "bot_pass",
+  :chan => "#chan1,#chanN",
+  :logs => $conf[:dir][:root] + "log/"
+}
+  
+# DB Settings
+$conf[:db] = {
+  :adapter   => "mysql",
+  :host      => "localhost",
+  :database  => "db",
+  :username  => "user",
+  :password  => "pass"
+}
+
