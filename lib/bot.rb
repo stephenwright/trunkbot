@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'escape'
+require 'lib/eight.rb'
 
 class Bot
 
@@ -21,7 +22,7 @@ class Bot
 
     when /(.*?)\?$/
       p "[ Question asked: #{$1}? ]"
-      reponse EightBall.ask
+      reponse = EightBall.ask
       
     #when /(.+?)\s?>\s?(\w+)$/
     #  p "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
