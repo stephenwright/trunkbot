@@ -22,7 +22,7 @@ class Bot
 
     when /(.*?)\?$/
       p "[ Question asked: #{$1}? ]"
-      reponse = EightBall.ask
+      response = EightBall.ask
       
     #when /(.+?)\s?>\s?(\w+)$/
     #  p "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
