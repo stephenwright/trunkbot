@@ -1,5 +1,8 @@
 #!/usr/bin/env ruby
 
+require "rubygem"
+require "bundle/setup"
+
 require "date"
 require "socket"
 require File.join( File.dirname( __FILE__ ), 'conf.rb' )

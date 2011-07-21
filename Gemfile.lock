@@ -1,0 +1,18 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    activerecord (2.3.11)
+      activesupport (= 2.3.11)
+    activesupport (2.3.11)
+    escape (0.0.4)
+    nokogiri (1.5.0)
+    tzinfo (0.3.29)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  activerecord (= 2.3.11)
+  escape (>= 0.0.4)
+  nokogiri (>= 1.4.6)
+  tzinfo (>= 0.3.29)
