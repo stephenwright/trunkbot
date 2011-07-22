@@ -31,9 +31,11 @@ class Bot
       args = in_str.split
       cmd = args.shift
       if (File.exist? "cmd/#{cmd}.rb")
-        
+
+        p "File exists!"
+
         cmd = Escape.shell_command([ "cmd/#{cmd}.rb", *args ]).to_s
-        p cmd
+        p "COMMAND: " + cmd
         response = `#{cmd}`
       else
         p "'#{cmd}' does not compute."

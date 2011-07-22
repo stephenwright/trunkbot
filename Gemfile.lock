@@ -7,6 +7,7 @@ GEM
     escape (0.0.4)
     nokogiri (1.5.0)
     tzinfo (0.3.29)
+    xml-simple (1.1.0)
 
 PLATFORMS
   ruby
@@ -16,3 +17,4 @@ DEPENDENCIES
   escape (>= 0.0.4)
   nokogiri (>= 1.4.6)
   tzinfo (>= 0.3.29)
+  xml-simple (= 1.1.0)

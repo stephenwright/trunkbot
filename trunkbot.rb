@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
-require "rubygem"
-require "bundle/setup"
-
+require "rubygems"
+require "bundler/setup"
 require "date"
 require "socket"
+
 require File.join( File.dirname( __FILE__ ), 'conf.rb' )
 require $conf[:dir][:root] + "lib/bot.rb"
 require $conf[:dir][:root] + "lib/eight.rb"
