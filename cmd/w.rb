@@ -14,6 +14,8 @@ class WeatherTrunk
     uri = "http://www.google.com/ig/api?weather=#{URI.escape(q)}"
     doc = Nokogiri::XML( open( uri ) )
 
+    return "weather unknown" if doc.css('forecast_information').empty?
+
     city = doc.css('forecast_information > city')[0]['data']
     curr = doc.css('current_conditions > temp_c')[0]['data']
     cond = doc.css('current_conditions > condition')[0]['data']
