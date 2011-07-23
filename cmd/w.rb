@@ -7,7 +7,7 @@ require 'open-uri'
 class WeatherTrunk
 
   def to_c f
-    return ( (f.to_f - 32) / 9 * 5 ).to_i
+    return ( ( f.to_f - 32 ) / 9 * 5 ).to_i
   end
 
   def lookup q
@@ -19,9 +19,9 @@ class WeatherTrunk
     cond = doc.css('current_conditions > condition')[0]['data']
     cast = []
     doc.css('forecast_conditions').each { |fcast|
+      day = fcast.css('day_of_week')[0]['data']
       hi = to_c fcast.css('high')[0]['data']
       lo = to_c fcast.css('low')[0]['data']
-      day = fcast.css('day_of_week')[0]['data']
       cast.push("#{day} #{hi}/#{lo}")
     }
     return "#{city} :: #{curr}, #{cond} :: #{cast.join(' | ')}"
@@ -30,5 +30,5 @@ class WeatherTrunk
 end
 
 if __FILE__ == $0
-  puts WeatherTrunk.new.lookup ARGV[0] || "Burlington,On"
+  puts WeatherTrunk.new.lookup ( ARGV[0] ? ARGV.join(' ') : "Burlington, ON" )
 end
