@@ -30,5 +30,5 @@ class WeatherTrunk
 end
 
 if __FILE__ == $0
-  puts WeatherTrunk.new.lookup ( ARGV[0] ? ARGV.join(' ') : "Burlington, ON" )
+  puts WeatherTrunk.new.lookup( ARGV[0] ? ARGV.join(' ') : "Burlington, ON" )
 end
