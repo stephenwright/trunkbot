@@ -11,7 +11,7 @@ class WeatherTrunk
   end
 
   def lookup q
-    uri = "http://www.google.com/ig/api?weather=#{q}"
+    uri = "http://www.google.com/ig/api?weather=#{URI.escape(q)}"
     doc = Nokogiri::XML( open( uri ) )
 
     city = doc.css('forecast_information > city')[0]['data']
