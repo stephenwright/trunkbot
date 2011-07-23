@@ -28,8 +28,8 @@ if __FILE__ == $0
   word = MagicWord.todays_word
   test = ARGV[0] || "test"
   if MagicWord.is_in? test
-    puts "test word '#{test}' is magic!"
+    puts "'#{test}' is magic!"
   else
-    puts "test word '#{test}' is not magic '#{word}'."
+    puts "'#{test}' is not magic... (hint: it's '#{word}')"
   end
 end

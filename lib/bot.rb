@@ -12,15 +12,12 @@ class Bot
 
   def process in_str
     p "processing cmd: #{ in_str }"
-
     response = ''
-
+    
     case in_str
-
     when /(.*?)\?$/
       p "[ Question asked: #{$1}? ]"
       response = EightBall.ask
-      
     else
       args = in_str.split
       cmd = args.shift
@@ -31,7 +28,6 @@ class Bot
       else
         p "'#{cmd}' does not compute."
       end
-
     end
     return response
   end
@@ -40,7 +36,5 @@ end
 
 # Main
 if __FILE__ == $0 then
-
-  puts Bot.new.process ARGV.join(' ')
-  
+  puts Bot.new.process ARGV.join(' ')  
 end
