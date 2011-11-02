@@ -96,7 +96,7 @@ class IRC
     when 'JOIN' # params ":<channel>"
       chn.sub!(/^:/, '')
       log "#{usr} JOIN #{chn}", chn
-      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @nick
+      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @nick && ( usr =~ /_ender$/ ).nil?
 
     when 'KICK' # params "<channel> <target> :<msg>"
       prm = params.split(" ", 3)
