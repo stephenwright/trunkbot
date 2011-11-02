@@ -28,20 +28,20 @@ if ARGV.length == 1
     puts 'no note found'
   end
 
-elsif ARGV.length == 2
+elsif ARGV.length == 0
+  puts 'usage: note <name> [<text>]'
+
+else
   # add note
   n = Note.find(:first, :conditions => ['name = ?', ARGV[0]]) || Note.new 
   
   n.name = ARGV[0]
-  n.content = ARGV[1]
+  n.content = ARGV.slice( 1 .. ARGV.length ).join(" ")
 
   if n.save
     puts "note saved"
   else
     puts "error saving the note"
   end
-
-else
-  puts 'usage: note <name> ["<text>"]'
 
 end
