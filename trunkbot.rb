@@ -96,7 +96,8 @@ class IRC
     when 'JOIN' # params ":<channel>"
       chn.sub!(/^:/, '')
       log "#{usr} JOIN #{chn}", chn
-      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @nick && ( usr =~ /_ender$/ ).nil?
+      do_greet = ( usr =~ /_ender$|^derjur$|^office_|^eight_/ ).nil?
+      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @nick && do_greet
 
     when 'KICK' # params "<channel> <target> :<msg>"
       prm = params.split(" ", 3)
@@ -147,6 +148,10 @@ class IRC
         say "#{from} said the magic word!", to
         send "KICK #{to} #{from} :YOU SAID THE MAGIC WORD!!"
         return
+      end
+
+      if /the game/i =~ msg
+        send "KICK #{to} #{from} :you know what you did..."
       end
 
       case msg
