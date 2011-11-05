@@ -15,11 +15,11 @@ module MagicWord
     # This is to ensure the magic word stays the same for an entire calendar day.
     srand( Date.today.yday() )
 
-	words = []
-	f = File.new( $conf[:dir][:root] + "dict/magicwords", "r" )
-	f.each{|line| words << line.chomp }
+    words = []
+    f = File.new( $conf[:dir][:root] + "dict/magicwords", "r" )
+    f.each{|line| words << line.chomp }
 
-	return words[ rand( words.length ) ]
+    return words[ rand( words.length ) ]
   end
 
 end
