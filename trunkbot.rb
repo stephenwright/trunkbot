@@ -105,9 +105,12 @@ class IRC
       msg = prm[2]
       log "#{usr} KICK #{chn} #{trg} #{msg}", chn
 
-    when 'INVITE' # params "<channel> :<msg>"
+    when 'INVITE' # params "<target> :<chan>"
+      prm = params.split(" ", 2)
+      trg = prm[0];
+      chn = prm[1].sub(/^:/, '')
       send "JOIN #{chn}"
-      log "#{usr} INVITE by #{chn} :#{msg}"
+      log "#{usr} INVITE #{trg} :#{chn}"
       
     when 'QUIT' 
     when 'PART' 
@@ -150,7 +153,7 @@ class IRC
         return
       end
 
-      if /the game/i =~ msg
+      if /^the game$/i =~ msg
         send "KICK #{to} #{from} :you know what you did..."
       end
 
