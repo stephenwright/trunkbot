@@ -24,17 +24,21 @@ class IRC
   end
 
   def log msg, chan=@chan
+    if $conf[:irc][:collect_logs] || $conf[:irc][:collect_logs].nil?
     log_dir = $conf[:irc][:logs]
     f = File.open("#{log_dir}#{chan.sub('#','')}.#{Date.today}.log", "a")
     f.write("[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n")
     f.close
   end
+  end
   
   def log_raw msg
+    if $conf[:irc][:collect_logs] || $conf[:irc][:collect_logs].nil?
     log_dir = $conf[:irc][:logs]
     f = File.open("#{log_dir}raw.#{Date.today}.log", "a")
     f.write("[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n")
     f.close
+  end
   end
 
   def initialize server, port, nick, pass, channel
