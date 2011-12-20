@@ -148,8 +148,9 @@ class IRC
     else
       # message to channel
       if MagicWord.is_in? msg
-        say "#{from} said the magic word!", to
-        send "KICK #{to} #{from} :YOU SAID THE MAGIC WORD!!"
+        #say "#{from} said the magic word!", to
+        say "EXTERMINATE.", to
+        send "KICK #{to} #{from} :*zap*"
         return
       end
 
