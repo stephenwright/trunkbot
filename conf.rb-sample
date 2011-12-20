@@ -15,6 +15,7 @@ $conf[:irc] = {
   :nick => "bot_name",
   :pass => "bot_pass",
   :chan => "#chan1,#chanN",
+  :collect_logs => true,
   :logs => $conf[:dir][:root] + "log/"
 }
   
