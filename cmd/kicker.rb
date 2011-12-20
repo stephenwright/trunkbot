@@ -21,6 +21,6 @@ def readLogs(path,chan)
 end
 
 chan = ARGV[0] || "b33r_time"
-kicks = readLogs $conf[:irc][:logs], chan
+kicks = readLogs $conf[:log][:dir], chan
 kicks.each{|key,val| puts "#{key}: #{val}" }
 

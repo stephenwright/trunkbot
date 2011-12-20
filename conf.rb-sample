@@ -14,9 +14,13 @@ $conf[:irc] = {
   :host => "irc.host.net",
   :nick => "bot_name",
   :pass => "bot_pass",
-  :chan => "#chan1,#chanN",
-  :collect_logs => true,
-  :logs => $conf[:dir][:root] + "log/"
+  :chan => "#chan1,#chanN"
+}
+
+$conf[:log] = {
+  :dir => $conf[:dir][:root] + "log/",
+  :raw => false,
+  :enabled => false
 }
   
 # DB Settings
