@@ -34,7 +34,7 @@ class IRC
   
   def log_raw msg
     if $conf[:log][:raw]
-      log_dir = $conf[:irc][:logs]
+      log_dir = $conf[:log][:dir]
       f = File.open("#{log_dir}raw.#{Date.today}.log", "a")
       f.write("[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n")
       f.close

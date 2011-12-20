@@ -3,3 +3,4 @@ conf.rb
 *.swp
 .idea/*
 .DS_Store
+dict/derjur.log
