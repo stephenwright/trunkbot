@@ -6,7 +6,9 @@ phrases = []
 f = File.new( $conf[:dir][:root] + "dict/derjur.log", "r" )
 f.each{|line| phrases << line.chomp }
 
-3.times do
-   puts phrases[rand(phrases.length)]
-end
+s  = '  ' + phrases[rand(phrases.length)] + "\n"
+s += '  ' + phrases[rand(phrases.length)] + "\n"
+s += '  ' + phrases[rand(phrases.length)] + "\n     - derjur"
+
+puts s
 

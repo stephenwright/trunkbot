@@ -4,3 +4,4 @@ conf.rb
 .idea/*
 .DS_Store
 dict/derjur.log
+dict/*.log
