@@ -23,7 +23,16 @@ class Logger
   
   # The actual logging
   def log ( msg, level=@level )
-    puts msg if level <= @level
+    return if level > @level
+    
+    if $conf[:log][:output]
+      log_dir = $conf[:log][:dir]
+      f = File.open( "#{log_dir}bot.log", "w" )
+      f.write( "#{msg}\n" )
+      f.close
+    else
+      puts msg
+    end
   end
   
   # Convenience

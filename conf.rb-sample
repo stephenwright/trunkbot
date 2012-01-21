@@ -20,7 +20,10 @@ $conf[:irc] = {
 $conf[:log] = {
   :dir => $conf[:dir][:root] + "log/",
   :raw => false,
-  :enabled => false
+  :enabled => false,
+
+  # should output go to a logfile instead of of stdout?
+  :output => false
 }
   
 # DB Settings
