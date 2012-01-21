@@ -35,8 +35,3 @@ class Logger
   def trace ( msg ); log msg, TRACE; end
 
 end
-
-# Main
-if __FILE__ == $0 then
-  puts Bot.new.process ARGV.join(' ')  
-end
