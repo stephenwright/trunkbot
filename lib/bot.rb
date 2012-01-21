@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # @file bot.rb
 
+require "escape"
+
 # The bot brains
 class Bot
 
@@ -49,7 +51,7 @@ if __FILE__ == $0 then
   Dir.chdir $conf[:dir][:root]
   require "lib/logger.rb"
   require "rubygems"
-  require "escape"
+  require "bundler/setup"
 
   puts Bot.new( 'blank' ).process ARGV.join(" ")
 
