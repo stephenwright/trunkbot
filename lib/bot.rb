@@ -1,40 +1,37 @@
 #!/usr/bin/env ruby
 
-require 'rubygems'
-require 'escape'
-require 'lib/eight.rb'
-
+# The bot brains to handle user interaction
 class Bot
-
-  def p msg
-    $stdout.puts msg
+  
+  attr_accessor :nick
+  
+  # Constructor
+  def initialize nick
+    @nick = nick
+    @log = Logger.new()
   end
 
+  # Process commands 
   def process in_str
-    p "processing cmd: #{ in_str }"
+    @log.debug "processing cmd: #{ in_str }"
     response = ''
-    
+
     case in_str
     when /(.*?)\?$/
-      p "[ Question asked: #{$1}? ]"
+      @log.debug "[ Question asked: #{$1}? ]"
       response = EightBall.ask
     else
       args = in_str.split
       cmd = args.shift
       if (File.exist? "cmd/#{cmd}.rb")
         cmd = Escape.shell_command([ "cmd/#{cmd}.rb", *args ]).to_s
-        p "COMMAND: " + cmd
+        @log.debug "COMMAND: " + cmd
         response = `#{cmd}`
       else
-        p "'#{cmd}' does not compute."
+        @log.debug "'#{cmd}' does not compute."
       end
     end
     return response
   end
 
-end
-
-# Main
-if __FILE__ == $0 then
-  puts Bot.new.process ARGV.join(' ')  
 end
