@@ -6,7 +6,9 @@ require "date"
 require "socket"
 
 # the IRC class 
-class IRC
+class IRC < Interface
+  
+  attr_accessor :serv, :port, :nick, :pass
   
   # Logging
   # ===========================================================================
@@ -30,14 +32,10 @@ class IRC
   end
   
   # Constructor
-  def initialize ( server, port, nick, pass, channel )
+  def initialize ( bot )
     @log = Logger.new()
     @log.level = Logger::DEBUG
-    @serv = server
-    @port = port
-    @nick = nick
-    @pass = pass
-    @chan = channel
+    @bot = bot
   end
 
 
@@ -45,18 +43,28 @@ class IRC
   # ===========================================================================
   
   # Initialize connection to IRC server
-  def connect
+  def connect ( server, port=6667, pass=nil )
     @log.info "[ connect ]"
+    
+    @serv = server
+    @port = port
+    @pass = pass
+    
     @log.info "#{@serv} #{@port}"
     
     @socket = TCPSocket.open( @serv, @port )
-    send "NICK #{@nick}"
+    
+    send "NICK #{@bot.nick}"
     send "USER TrunkBot bird trunkbit.com work"
+    
     if @pass
       send "PASS #{@pass}"
       send "PRIVMSG NickServ :identify #{@pass}"
     end
-    send "JOIN #{@chan}"
+  end
+  
+  def join ( chan )
+    send "JOIN #{chan}"
   end
   
   # Push messages to the server
@@ -113,7 +121,7 @@ class IRC
     when 'JOIN' # params ":<channel>"
       chn.sub!(/^:/, '')
       log "#{usr} JOIN #{chn}", chn
-      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @nick
+      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @bot.nick
 
     when 'KICK' # params "<channel> <target> :<msg>"
       prm = params.split(" ", 3)
@@ -160,9 +168,9 @@ class IRC
     @log.trace "[ action_privmsg ]"
     
     log "#{trg}.#{usr}:#{msg}", trg
-    return if usr == @nick
+    return if usr == @bot.nick
     
-    if trg == @nick
+    if trg == @bot.nick
       # message to bot
       do_cmd msg, usr, usr
     else
@@ -181,7 +189,7 @@ class IRC
         @log.debug "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
         do_cmd $1, usr, $2
 
-      when /^(#{@nick}[:,]?\s|!)(.+)/
+      when /^(#{@bot.nick}[:,]?\s|!)(.+)/
         do_cmd $2, usr, trg
       end
     end
@@ -190,12 +198,43 @@ class IRC
   # from: the message send
   # to:   the message recipient, either the channel the message is sent in
   #       or the bot himself if the message is a direct/private one
-  def do_cmd msg, from, to
-    @log.trace "[ do_cmd #{cmd} ]"
+  def do_cmd ( msg, from, to )
+    @log.trace "[ do_cmd #{msg} ]"
+
+    # message to bot responds to sender
+    # message to channel responds to channel
+    to = from if to == @bot.nick
+
+    case msg
+    when /^VERSION$/i
+      say "TrunkBot #{@bot.version}", to
+
+    else
+      out = @bot.process msg
+      out.split("\n").each {|line| say line, to; sleep(0.5); }
+    end
   end
 
   # the Main Loop
   # ===========================================================================
+  
+  def start
+    @running = true
+    while @running
+      ready = select( [@socket], nil, nil, nil )
+      next unless ready
+
+      # Handle messages received throught the socket
+      if ready[0].include? @socket then
+        return if @socket.eof
+        receive_message( @socket.gets )
+      end
+    end
+  end
+  
+  def stop
+    @running = false
+  end
   
   def main_loop
     loop do

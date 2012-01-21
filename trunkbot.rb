@@ -1,46 +1,60 @@
 #!/usr/bin/env ruby
+# @file trunkbot.rb
+#
+# TrunkBot - IRC Bot 
+# The do everything wonder bot!
 
+# include required ruby gems and libraries
 require "rubygems"
 require "bundler/setup"
+require "thread"
 
+# include project configuration
 require File.join( File.dirname( __FILE__ ), 'conf.rb' )
+
+# set working directory to project root
 Dir.chdir $conf[:dir][:root]
+
+# include project libraries
 require "lib/logger.rb"
-require "lib/irc.rb"
 require "lib/bot.rb"
-require "lib/eight.rb"
-require "lib/magicword.rb"
+require "lib/interface.rb"
+require "lib/irc.rb"
 
-# TrunkBot - IRC Bot 
-#
-# The do everything wonder bot!
-#
-class TrunkBot < IRC
+# main application object
+class TrunkBot
 
-  @version = "v1.3"
-
-  def initialize ( server, port, nick, pass, channel )
-    super( server, port, nick, pass, channel )
-    @bot = Bot.new( nick )
+  def initialize 
+    @bot = Bot.new( $conf[:irc][:nick] )
+    @irc = IRC.new( @bot )
   end
-
-  # from: the message send
-  # to:   the message recipient, either the channel the message is sent in
-  #       or the bot himself if the message is a direct/private one
-  def do_cmd ( msg, from, to )
-    @log.trace "[ do_cmd #{msg} ]"
-
-    # message to bot responds to sender
-    # message to channel responds to channel
-    to = from if to == @nick
-
-    case msg
-    when /^VERSION$/i
-      say "TrunkBot #{@version}", to
-
-    else
-      out = @bot.process msg
-      out.split("\n").each {|line| say line, to; sleep(0.5); }
+  
+  # Get things rolling
+  def run
+    
+    # store the process id
+    f = File.open( "tmp/pid", "w" )
+    f.write( "#{Process.pid}\n" )
+    f.close
+    
+    # hook up the irc interface
+    host = $conf[:irc][:host]
+    pass = $conf[:irc][:pass]
+    port = 6667
+    @irc.connect host, port, pass
+    @irc.join $conf[:irc][:chan]
+    
+    begin
+      irc_thread = Thread.new { 
+        @irc.start
+      }
+      irc_thread.join
+  
+    rescue StandardError => e
+      puts e.message
+      puts e.backtrace.join("\n")
+      retry
+    
     end
   end
   
@@ -48,23 +62,7 @@ end
 
 # Main
 if __FILE__ == $0 then
-
-  host = $conf[:irc][:host]
-  nick = $conf[:irc][:nick]
-  pass = $conf[:irc][:pass]
-  chan = $conf[:irc][:chan]
-  port = 6667
   
-  tbot = TrunkBot.new( host, port, nick, pass, chan )
-  tbot.connect()
-  
-  begin
-    tbot.main_loop
-  rescue Interrupt
-  rescue Exception => detail
-    puts detail.message
-    print detail.backtrace.join("\n")
-    retry
-  end
+  tbot = TrunkBot.new.run()
   
 end

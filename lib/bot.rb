@@ -1,9 +1,12 @@
 #!/usr/bin/env ruby
+# @file bot.rb
 
 # The bot brains
 class Bot
+
+  @version = "v1.3"
   
-  attr_accessor :nick
+  attr_accessor :nick, :version
   
   # Constructor
   def initialize nick
