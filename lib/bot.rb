@@ -1,12 +1,15 @@
 #!/usr/bin/env ruby
 
-# The bot brains to handle user interaction
+# The bot brains
 class Bot
   
   attr_accessor :nick
   
   # Constructor
   def initialize nick
+    require "lib/eight.rb"
+    require "lib/magicword.rb"
+    
     @nick = nick
     @log = Logger.new()
   end
@@ -33,5 +36,18 @@ class Bot
     end
     return response
   end
+
+end
+
+# Main
+if __FILE__ == $0 then
+  
+  require File.join( File.dirname( __FILE__ ), '../conf.rb' )
+  Dir.chdir $conf[:dir][:root]
+  require "lib/logger.rb"
+  require "rubygems"
+  require "escape"
+
+  puts Bot.new( 'blank' ).process ARGV.join(" ")
 
 end
