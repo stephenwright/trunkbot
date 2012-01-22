@@ -7,7 +7,7 @@ and specify what channel and server you want it to join.
 
   $ cp conf.rb-sample conf.rb
 
-Run the bot from the project root.
+Run the bot.
 
   $ ./trunkbot.rb
 
