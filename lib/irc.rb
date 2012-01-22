@@ -74,7 +74,7 @@ class IRC < Interface
   end
   
   # Send a message to a channel or user
-  def say msg, to
+  def privmsg to, msg
     send "PRIVMSG #{to} :#{msg}"
   end
   
@@ -145,7 +145,7 @@ class IRC < Interface
       /(.+?)\s:(.+)/.match(params)
       to = $1
       msg = $2
-      action_privmsg msg, usr, to
+      action_msg msg, usr, to
     end
   end
   
@@ -164,8 +164,8 @@ class IRC < Interface
   end
   
   # Handle PRIVMSG
-  def action_privmsg ( msg, usr, trg )
-    @log.trace "[ action_privmsg ]"
+  def action_msg ( msg, usr, trg )
+    @log.trace "[ action_msg ]"
     
     log "#{trg}.#{usr}:#{msg}", trg
     return if usr == @bot.nick
@@ -176,7 +176,7 @@ class IRC < Interface
     else
       # message to channel
       if MagicWord.is_in? msg
-        say "EXTERMINATE.", trg
+        privmsg trg, "EXTERMINATE."
         kick trg, usr, "*zap*"
         return
       end
@@ -207,11 +207,11 @@ class IRC < Interface
 
     case msg
     when /^VERSION$/i
-      say "TrunkBot #{@bot.version}", to
+      privmsg to, "TrunkBot #{@bot.version}"
 
     else
       out = @bot.process msg
-      out.split("\n").each {|line| say line, to; sleep(0.5); }
+      out.split("\n").each {|line| privmsg to, line; sleep(0.5); }
     end
   end
 
