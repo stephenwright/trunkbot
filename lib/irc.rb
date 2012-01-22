@@ -74,7 +74,7 @@ class IRC < Interface
   end
   
   # Send a message to a channel or user
-  def privmsg to, msg
+  def privmsg ( to, msg )
     send "PRIVMSG #{to} :#{msg}"
   end
   
