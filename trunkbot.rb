@@ -39,9 +39,9 @@ class TrunkBot
     
     # hook up the irc interface
     host = $conf[:irc][:host]
+    nick = $conf[:irc][:nick]
     pass = $conf[:irc][:pass]
-    port = 6667
-    @irc.connect host, port, pass
+    @irc.connect host, nick, pass
     @irc.join $conf[:irc][:chan]
     
     begin

@@ -9,7 +9,45 @@ require "socket"
 class IRC < Interface
   
   attr_accessor :serv, :port, :nick, :pass
-  
+
+  # the Main Loop
+  # ===========================================================================
+
+  def start
+    @running = true
+    while @running
+      ready = select( [@socket], nil, nil, nil )
+      next unless ready
+
+      # Handle messages received throught the socket
+      if ready[0].include? @socket then
+        return if @socket.eof
+        receive_message( @socket.gets )
+      end
+    end
+  end
+
+  def main_loop
+    loop do
+
+      ready = select([@socket, $stdin], nil, nil, nil)
+      next unless ready
+
+      # Handle command line input
+      if ready[0].include? $stdin then
+        return if $stdin.eof
+        send $stdin.gets
+
+      # Handle messages received throught the socket
+      elsif ready[0].include? @socket then
+        return if @socket.eof
+        receive_message(@socket.gets)
+
+      end
+
+    end
+  end
+
   # Logging
   # ===========================================================================
 
@@ -30,7 +68,7 @@ class IRC < Interface
       f.close
     end
   end
-  
+
   # Constructor
   def initialize ( bot )
     @log = Logger.new()
@@ -38,23 +76,23 @@ class IRC < Interface
     @bot = bot
   end
 
-
   # Handle communications with server
   # ===========================================================================
   
   # Initialize connection to IRC server
-  def connect ( server, port=6667, pass=nil )
+  def connect ( host, nick, pass=nil, port=6667 )
     @log.info "[ connect ]"
     
-    @serv = server
-    @port = port
+    @host = host
+    @nick = nick
     @pass = pass
+    @port = port
     
-    @log.info "#{@serv} #{@port}"
+    @log.info "#{@host} #{@port}"
     
-    @socket = TCPSocket.open( @serv, @port )
+    @socket = TCPSocket.open( @host, @port )
     
-    send "NICK #{@bot.nick}"
+    send "NICK #{@nick}"
     send "USER TrunkBot bird trunkbit.com work"
     
     if @pass
@@ -62,15 +100,16 @@ class IRC < Interface
       send "PRIVMSG NickServ :identify #{@pass}"
     end
   end
-  
-  def join ( chan )
-    send "JOIN #{chan}"
-  end
-  
+
   # Push messages to the server
   def send ( s )
     @log.info "--> #{s}\n"
     @socket.send "#{s}\n", 0
+  end
+  
+  # Join specified channel
+  def join ( chan )
+    send "JOIN #{chan}"
   end
   
   # Send a message to a channel or user
@@ -83,26 +122,24 @@ class IRC < Interface
     send "KICK #{chn} #{usr} :#{msg}"
   end
   
-  # Receive messages sent from the server
-  def receive_message ( s )
-    s.strip!
-
-    if /^PING :(.+)$/i =~ s # Reply to PINGs to keep the connection alive
-      send "PONG :#{$1}"
-      return
-    end
-    
-    @log.info "<-- #{s}\n"
-    log_raw s
-
-    # Messages from Server should come as follows:
-    # :<nick>!<userName>@<userDomain> <action> <action-specific-parameters>
-    process_message $1, $2, $3 if /^:(.+?)\s(.+?)\s(.*)/ =~ s
-  end
-  
   
   # Deal with messages from the server
   # ===========================================================================
+
+  # Receive messages sent from the server
+  def receive_message ( s )
+    s.strip!
+    if /^PING :(.+)$/i =~ s # Reply to PINGs to keep the connection alive
+      send "PONG :#{$1}"
+    else
+      @log.info "<-- #{s}\n"
+      log_raw s
+  
+      # Messages from Server should come as follows:
+      # :<nick>!<userName>@<userDomain> <action> <action-specific-parameters>
+      process_message $1, $2, $3 if /^:(.+?)\s(.+?)\s(.*)/ =~ s
+    end
+  end
   
   # Process message received from the server
   def process_message ( source, action, params )
@@ -112,24 +149,30 @@ class IRC < Interface
     chn = params.split(' ')[0] # channel specific actions have channel name as 1st parameter
 
     case action
+    when 'PRIVMSG' 
+      /(.+?)\s:(.+)/.match(params)
+      to = $1
+      msg = $2
+      action_msg msg, usr, to
+
     when /(\d\d\d)/ # Three digit code
       action_code $1
 
-    when 'TOPIC' # params "<channel> :<topic>"
-      log "#{usr} TOPIC #{params}", chn
-
-    when 'JOIN' # params ":<channel>"
+    when 'JOIN' # :<channel>
       chn.sub!(/^:/, '')
       log "#{usr} JOIN #{chn}", chn
-      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @bot.nick
+      send "PRIVMSG #{chn} :Hello #{usr}" if usr != @nick
 
-    when 'KICK' # params "<channel> <target> :<msg>"
+    when 'KICK' # <channel> <target> :<msg>
       prm = params.split(" ", 3)
       trg = prm[1]
       msg = prm[2]
       log "#{usr} KICK #{chn} #{trg} #{msg}", chn
 
-    when 'INVITE' # params "<target> :<chan>"
+    when 'TOPIC' # <channel> :<topic>
+      log "#{usr} TOPIC #{params}", chn
+
+    when 'INVITE' # <target> :<chan>
       prm = params.split(" ", 2)
       trg = prm[0];
       chn = prm[1].sub(/^:/, '')
@@ -140,12 +183,6 @@ class IRC < Interface
     when 'PART' 
     when 'NICK'
     when 'MODE'
-
-    when 'PRIVMSG' 
-      /(.+?)\s:(.+)/.match(params)
-      to = $1
-      msg = $2
-      action_msg msg, usr, to
     end
   end
   
@@ -168,9 +205,9 @@ class IRC < Interface
     @log.trace "[ action_msg ]"
     
     log "#{trg}.#{usr}:#{msg}", trg
-    return if usr == @bot.nick
+    return if usr == @nick
     
-    if trg == @bot.nick
+    if trg == @nick
       # message to bot
       do_cmd msg, usr, usr
     else
@@ -189,72 +226,19 @@ class IRC < Interface
         @log.debug "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
         do_cmd $1, usr, $2
 
-      when /^(#{@bot.nick}[:,]?\s|!)(.+)/
+      when /^(#{@nick}[:,]?\s|!)(.+)/
         do_cmd $2, usr, trg
       end
     end
   end
 
-  # from: the message send
+  # from: the message sender
   # to:   the message recipient, either the channel the message is sent in
   #       or the bot himself if the message is a direct/private one
   def do_cmd ( msg, from, to )
     @log.trace "[ do_cmd #{msg} ]"
-
-    # message to bot responds to sender
-    # message to channel responds to channel
-    to = from if to == @bot.nick
-
-    case msg
-    when /^VERSION$/i
-      privmsg to, "TrunkBot #{@bot.version}"
-
-    else
-      out = @bot.process msg
-      out.split("\n").each {|line| privmsg to, line; sleep(0.5); }
-    end
-  end
-
-  # the Main Loop
-  # ===========================================================================
-  
-  def start
-    @running = true
-    while @running
-      ready = select( [@socket], nil, nil, nil )
-      next unless ready
-
-      # Handle messages received throught the socket
-      if ready[0].include? @socket then
-        return if @socket.eof
-        receive_message( @socket.gets )
-      end
-    end
+    out = @bot.process msg
+    out.split("\n").each {|line| privmsg to, line; sleep(0.5); }
   end
   
-  def stop
-    @running = false
-  end
-  
-  def main_loop
-    loop do
-
-      ready = select([@socket, $stdin], nil, nil, nil)
-      next unless ready
-      
-      # Handle command line input
-      if ready[0].include? $stdin then
-        return if $stdin.eof
-        send $stdin.gets
-        
-      # Handle messages received throught the socket
-      elsif ready[0].include? @socket then
-        return if @socket.eof
-        receive_message(@socket.gets)
-        
-      end
-
-    end
-  end
-
 end
