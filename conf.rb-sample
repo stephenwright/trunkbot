@@ -4,6 +4,8 @@
 
 # Primary Settings
 $conf = {
+  :version => '1.4',
+
   :dir => {
     :root => "/path/to/trunkbot/"
   }
@@ -12,6 +14,7 @@ $conf = {
 # IRC Settings
 $conf[:irc] = {
   :host => "irc.host.net",
+  :port => "6667",
   :nick => "bot_name",
   :pass => "bot_pass",
   :chan => "#chan1,#chanN"
