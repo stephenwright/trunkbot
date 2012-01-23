@@ -1,12 +1,8 @@
 #!/usr/bin/env ruby
 # @file bot.rb
 
-require "escape"
-
 # The bot brains
 class Bot
-
-  @version = "v1.3"
   
   attr_accessor :nick, :version
   
@@ -14,6 +10,7 @@ class Bot
   def initialize nick
     require "lib/eight.rb"
     require "lib/magicword.rb"
+    require "escape"
     
     @nick = nick
     @log = Logger.new()
@@ -47,12 +44,60 @@ end
 # Main
 if __FILE__ == $0 then
   
+  require "rubygems"
+  require "bundler/setup"
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
   Dir.chdir $conf[:dir][:root]
   require "lib/logger.rb"
-  require "rubygems"
-  require "bundler/setup"
 
-  puts Bot.new( 'blank' ).process ARGV.join(" ")
+  #puts Bot.new( 'blank' ).process ARGV.join(" ")
+  
+  require "socket"
+  require "thread"
+  
+  $b = Bot.new( 'funkbot' );
+  @done = false
+  
+  def proc cmd
+    case cmd
+    when /quit/i
+      @done = true
+      puts "quiting"
+      exit
+    end
+    return $b.process cmd
+  end
+  
+  t_cli = Thread.new {
+    loop do
+      ready = select([$stdin], nil, nil, nil)
+      next unless ready
+      cmd = ""
+      if ready[0].include? $stdin then
+        # Handle command line input
+        return if $stdin.eof
+        cmd = $stdin.gets
+        #puts "<< #{cmd}"
+        puts ">> #{proc cmd}"
+      end
+    end
+  }
+  
+  f = 'tmp/bot.socket'
+  File.unlink( f ) if File.exists?( f ) && File.socket?( f )
+  server = UNIXServer.new( f )
+  while !@done
+    sock = server.accept 
+    Thread.new {
+      puts "socket open"
+      while cmd = sock.gets
+          sock.puts proc cmd
+          sock.puts "---done---"
+      end
+      puts "done"
+      sock.close
+    }
+  end
+  File.delete( f )
 
 end
