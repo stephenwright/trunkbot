@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
 
-puts "ALL THINGS!"
+puts "both"
 
