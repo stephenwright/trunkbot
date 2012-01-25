@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require File.join( File.dirname( __FILE__ ), '../conf.rb' )
+Dir.chdir $conf[:dir][:root]
+
+require "socket"
+require "thread"
+
+pk = ARGV[0]
+puts "#{pk}"
+
+UNIXSocket.open( 'tmp/bot.socket' ) {|sock|
+  sock.puts "#{pk}"
+  while ( resp = sock.gets )
+    break if resp =~ /---done---/
+    puts "<< #{resp}"
+  end
+}
+

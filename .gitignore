@@ -5,3 +5,4 @@ conf.rb
 .DS_Store
 dict/derjur.log
 dict/*.log
+*~
