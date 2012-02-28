@@ -1,10 +1,16 @@
 #!/usr/bin/env ruby
 
 puts "supported commands: def" +
-  ", <anything ending with question mark>?" +
-  ", kicker" +
   ", fortune" +
-  ", wow" + 
-  ", note" +
+  ", histomatic" +
+  ", kicker" +
+  ", magicword" +
   ", maru" +
-  ", magicword"
+  ", note" +
+  ", test" +
+  ", time" +
+  ", version" +
+  ", w | weather" +
+  ", wow" + 
+  ", <anything ending with question mark>?"
+
