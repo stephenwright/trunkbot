@@ -122,6 +122,10 @@ class IRC < Interface
     send "KICK #{chn} #{usr} :#{msg}"
   end
   
+  # invite a user to target channel
+  def invite ( usr, chn )
+    send "INVITE #{usr} #{chn}"
+  end
   
   # Deal with messages from the server
   # ===========================================================================
@@ -168,6 +172,10 @@ class IRC < Interface
       trg = prm[1]
       msg = prm[2]
       log "#{usr} KICK #{chn} #{trg} #{msg}", chn
+      if usr == "derjur" && trg = "beeeee"
+        kick chn, usr, "stop that"
+        invite chn, trg
+      end
 
     when 'TOPIC' # <channel> :<topic>
       log "#{usr} TOPIC #{params}", chn
@@ -176,7 +184,7 @@ class IRC < Interface
       prm = params.split(" ", 2)
       trg = prm[0];
       chn = prm[1].sub(/^:/, '')
-      send "JOIN #{chn}"
+      join chn
       log "#{usr} INVITE #{trg} :#{chn}"
 
     when 'QUIT' 
@@ -217,16 +225,18 @@ class IRC < Interface
         kick trg, usr, "*zap*"
         return
       end
+
+      cmd_start = "^(#{@nick}[:,]?\s|!)"
       
       case msg
       when /^the game$/i
         kick trg, usr, "you know what you did..."
         
-      when /(.+?)\s?>\s?(\w+)$/
-        @log.debug "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
-        do_cmd $1, usr, $2
+      when /#{cmd_start}(.+?)\s?>\s?(\w+)$/
+        @log.debug "[ Directed Command; cmd:#{$2}, trg:#{$3} ]"
+        do_cmd $2, usr, $3
 
-      when /^(#{@nick}[:,]?\s|!)(.+)/
+      when /#{cmd_start}(.+)/
         do_cmd $2, usr, trg
       end
     end
