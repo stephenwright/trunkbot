@@ -226,17 +226,11 @@ class IRC < Interface
         return
       end
 
-      cmd_start = "^(#{@nick}[:,]?\s|!)"
-      
       case msg
       when /^the game$/i
         kick trg, usr, "you know what you did..."
         
-      when /#{cmd_start}(.+?)\s?>\s?(\w+)$/
-        @log.debug "[ Directed Command; cmd:#{$2}, trg:#{$3} ]"
-        do_cmd $2, usr, $3
-
-      when /#{cmd_start}(.+)/
+      when /^(#{@nick}[:,]?\s?|!)(.+)/
         do_cmd $2, usr, trg
       end
     end
@@ -245,10 +239,15 @@ class IRC < Interface
   # from: the message sender
   # to:   the message recipient, either the channel the message is sent in
   #       or the bot himself if the message is a direct/private one
-  def do_cmd ( msg, from, to )
+  def do_cmd ( msg, from, trg )
     @log.trace "[ do_cmd #{msg} ]"
+    if /(.+?)>\s?(#?\w+)$/ =~ msg
+        @log.debug "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
+		msg = $1
+		trg = $2
+	end
     out = @bot.process msg
-    out.split("\n").each {|line| privmsg to, line; sleep(0.5); }
+    out.split("\n").each {|line| privmsg trg, line; sleep(0.5); }
   end
   
 end
