@@ -4,6 +4,8 @@ nick = ARGV[0]
 
 if nick
 
+  nick = "eight_ender" if nick == "ol_qwerty_bastrd"
+
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
 
   log = $conf[:dir][:root] + "dict/q.#{nick}.log"
