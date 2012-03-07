@@ -20,7 +20,7 @@ else
 	  (i..j).each {|n| puts defs[n] unless defs[n] == nil }
 	end
   else
-    if defs.length > 6
+    if defs.length > 7
 	  (0..6).each {|n| puts defs[n] }
 	  puts "Showing 1-7 of #{defs.length} definitions (the rest ommited to avoid flooding)"
 	else
