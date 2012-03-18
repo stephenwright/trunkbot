@@ -4,7 +4,8 @@ nick = ARGV[0]
 
 if nick
 
-  nick = "eight_ender" if nick == "ol_qwerty_bastrd"
+  ty = [ 'eight_ender', 'ol_qwerty_bastrd', 'HAM_RADIO', 'tyler' ]
+  nick = 'tyler' if ty.index( nick )
 
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
 
@@ -19,7 +20,7 @@ if nick
 
     s += '  ' + phrases[rand(phrases.length)] + "\n"
     s += '  ' + phrases[rand(phrases.length)] + "\n"
-    s += '  ' + phrases[rand(phrases.length)] + "\n     - #{nick}"
+    s += '  ' + phrases[rand(phrases.length)] + "\n     -#{nick}"
 
   else
     s = 'no log for that user'
