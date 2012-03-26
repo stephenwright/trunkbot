@@ -9,7 +9,7 @@ if nick
 
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
 
-  log = $conf[:dir][:root] + "dict/q.#{nick}.log"
+  log = $conf[:dir][:root] + "/dict/q.#{nick}.log"
   s = ''
 
   if File.exists? log

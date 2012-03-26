@@ -54,7 +54,7 @@ class IRC < Interface
   def log ( msg, chan=@chan )
     if $conf[:log][:enabled]
       log_dir = $conf[:log][:dir]
-      f = File.open( "#{log_dir}#{chan.sub('#','')}.#{Date.today}.log", "a" )
+      f = File.open( "#{log_dir}/#{chan.sub('#','')}.#{Date.today}.log", "a" )
       f.write( "[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n" )
       f.close
     end
@@ -63,7 +63,7 @@ class IRC < Interface
   def log_raw ( msg )
     if $conf[:log][:raw]
       log_dir = $conf[:log][:dir]
-      f = File.open( "#{log_dir}raw.#{Date.today}.log", "a" )
+      f = File.open( "#{log_dir}/raw.#{Date.today}.log", "a" )
       f.write( "[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n" )
       f.close
     end

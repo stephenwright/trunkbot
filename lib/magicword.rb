@@ -16,7 +16,7 @@ module MagicWord
     srand( Date.today.yday() )
 
     words = []
-    f = File.new( $conf[:dir][:root] + "dict/magicwords", "r" )
+    f = File.new( $conf[:dir][:root] + "/dict/magicwords", "r" )
     f.each{|line| words << line.chomp }
 
     return words[ rand( words.length ) ]

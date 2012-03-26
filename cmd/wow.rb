@@ -8,7 +8,7 @@ else
   t = ARGV[1] || 'stohen'
   
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
-  require $conf[:dir][:root] + 'lib/wow.rb'
+  require $conf[:dir][:root] + '/lib/wow.rb'
   include WorldOfWarcraft
   puts armory_lookup r,t
 

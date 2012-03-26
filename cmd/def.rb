@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require File.join( File.dirname( __FILE__ ), '../conf.rb' )
-require $conf[:dir][:root] + 'lib/wordnet.rb'
+require $conf[:dir][:root] + '/lib/wordnet.rb'
 
 if ARGV.length < 1
   puts "usage: def <word> [<number>[-<range>]]"
