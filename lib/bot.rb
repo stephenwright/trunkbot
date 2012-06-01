@@ -8,8 +8,8 @@ class Bot
   
   # Constructor
   def initialize nick
-    require "lib/eight.rb"
-    require "lib/magicword.rb"
+    require "./lib/eight.rb"
+    require "./lib/magicword.rb"
     require "escape"
     
     @nick = nick
@@ -32,7 +32,7 @@ class Bot
     else
       cmd = args.shift
       if (File.exist? "cmd/#{cmd}.rb")
-        cmd = Escape.shell_command([ "cmd/#{cmd}.rb", *args ]).to_s
+        cmd = Escape.shell_command([ "./cmd/#{cmd}.rb", *args ]).to_s
         @log.debug "COMMAND: " + cmd
         response = `#{cmd}`
       else

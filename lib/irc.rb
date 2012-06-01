@@ -172,7 +172,7 @@ class IRC < Interface
       trg = prm[1]
       msg = prm[2]
       log "#{usr} KICK #{chn} #{trg} #{msg}", chn
-      if usr == "derjur" && trg = "beeeee"
+      if usr == "derjur" && trg == "beeeee"
         kick chn, usr, "stop that"
         invite chn, trg
       end

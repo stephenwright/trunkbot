@@ -1,4 +1,5 @@
 log/*.log
+log/*.tgz
 conf.rb
 *.swp
 .idea/*

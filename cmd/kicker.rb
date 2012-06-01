@@ -9,7 +9,7 @@ def readLogs(path,chan)
   dir.each {|filename| if reg.match(filename) then
     chan = $1
     date = $2
-    f = File::open path+filename, "r"
+    f = File::open path+"/"+filename, "r", :encoding => "utf-8" 
     f.each {|line|
       next unless line =~ /^\[[\d:]+\]\s([\w\-]+?)\sKICK\s(.+?)\s(.+?)\s(.+?)\s/ # usr KICK chn trg msg
       usr = $1

@@ -2,7 +2,7 @@
 
 require 'rubygems'
 
-gem 'activerecord', '= 2.3.11'
+gem 'activerecord'
 require 'active_record'
 
 
