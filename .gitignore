@@ -7,3 +7,4 @@ conf.rb
 dict/derjur.log
 dict/*.log
 *~
+dict/bak
