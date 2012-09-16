@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require File.join( File.dirname( __FILE__ ), '../conf.rb' )
+require_relative('../conf.rb' )
 
 cmd_path = $conf[:dir][:root] + '/cmd'
 
