@@ -28,13 +28,3 @@ $conf[:log] = {
   # should output go to a logfile instead of of stdout?
   :output => false
 }
-  
-# DB Settings
-$conf[:db] = {
-  :adapter   => "mysql",
-  :host      => "localhost",
-  :database  => "db",
-  :username  => "user",
-  :password  => "pass"
-}
-
