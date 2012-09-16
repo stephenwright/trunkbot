@@ -19,6 +19,7 @@ GEM
     multi_json (1.2.0)
     mysql (2.8.1)
     nokogiri (1.5.2)
+    pg (0.11.0)
     tzinfo (0.3.29)
     xml-simple (1.1.0)
 
@@ -26,9 +27,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord (>= 3.0.2)
+  activerecord (>= 3.2.2)
   escape (>= 0.0.4)
   mysql
   nokogiri (>= 1.5.2)
+  pg
   tzinfo (>= 0.3.29)
   xml-simple (= 1.1.0)
