@@ -8,8 +8,8 @@ class Bot
   
   # Constructor
   def initialize nick
-    require "lib/eight.rb"
-    require "lib/magicword.rb"
+    require "./lib/eight.rb"
+    require "./lib/magicword.rb"
     require "escape"
     
     @nick = nick
@@ -19,17 +19,20 @@ class Bot
   # Process commands 
   def process in_str
     @log.debug "processing cmd: #{ in_str }"
-    response = ''
+	
+    args = in_str.split
+    cmd = Escape.shell_command([ "lib/known.rb", *args ]).to_s
+	response = `#{cmd}`
+	return response if !response.empty?
 
     case in_str
     when /(.*?)\?$/
       @log.debug "[ Question asked: #{$1}? ]"
       response = EightBall.ask
     else
-      args = in_str.split
       cmd = args.shift
       if (File.exist? "cmd/#{cmd}.rb")
-        cmd = Escape.shell_command([ "cmd/#{cmd}.rb", *args ]).to_s
+        cmd = Escape.shell_command([ "./cmd/#{cmd}.rb", *args ]).to_s
         @log.debug "COMMAND: " + cmd
         response = `#{cmd}`
       else

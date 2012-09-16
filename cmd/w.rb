@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'open-uri'
+require "escape"
 
 class WeatherTrunk
 
@@ -13,7 +14,6 @@ class WeatherTrunk
   def lookup q
     uri = "http://www.google.com/ig/api?weather=#{URI.escape(q)}"
     doc = Nokogiri::XML( open( uri ) )
-
     return "weather unknown" if doc.css('forecast_information').empty?
 
     city = doc.css('forecast_information > city')[0]['data']
@@ -32,5 +32,7 @@ class WeatherTrunk
 end
 
 if __FILE__ == $0
-  puts WeatherTrunk.new.lookup( ARGV[0] ? ARGV.join(' ') : "Burlington, ON" )
+  q = ARGV[0] ? ARGV.join(" ") : "Burlington, ON"
+  #puts "weather for: #{URI.escape( q )}"
+  puts WeatherTrunk.new.lookup q
 end

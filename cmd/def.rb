@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require File.join( File.dirname( __FILE__ ), '../conf.rb' )
-require $conf[:dir][:root] + 'lib/wordnet.rb'
+require $conf[:dir][:root] + '/lib/wordnet.rb'
 
 if ARGV.length < 1
   puts "usage: def <word> [<number>[-<range>]]"
@@ -20,7 +20,7 @@ else
 	  (i..j).each {|n| puts defs[n] unless defs[n] == nil }
 	end
   else
-    if defs.length > 6
+    if defs.length > 7
 	  (0..6).each {|n| puts defs[n] }
 	  puts "Showing 1-7 of #{defs.length} definitions (the rest ommited to avoid flooding)"
 	else

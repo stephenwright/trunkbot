@@ -10,16 +10,20 @@ require "bundler/setup"
 require "thread"
 
 # include project configuration
-require File.join( File.dirname( __FILE__ ), 'conf.rb' )
+conf_file = File.join( File.dirname( __FILE__ ), 'conf.rb' )
+puts conf_file
+require conf_file
 
 # set working directory to project root
 Dir.chdir $conf[:dir][:root]
 
+puts "pwd> #{$conf[:dir][:root]}"
+
 # include project libraries
-require "lib/logger.rb"
-require "lib/bot.rb"
-require "lib/interface.rb"
-require "lib/irc.rb"
+require "./lib/logger.rb"
+require "./lib/bot.rb"
+require "./lib/interface.rb"
+require "./lib/irc.rb"
 
 # main application object
 class TrunkBot
@@ -43,6 +47,7 @@ class TrunkBot
     pass = $conf[:irc][:pass]
     @irc.connect host, nick, pass
     @irc.join $conf[:irc][:chan]
+	#@irc.privmsg "chanserv", "op #b33r_time trunkbot"
     
     begin
       irc_thread = Thread.new { 

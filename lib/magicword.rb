@@ -7,7 +7,7 @@ module MagicWord
 
   def MagicWord.is_in? (txt)
     w = MagicWord.todays_word
-    return /[^a-z]?#{w}/i =~ txt
+    return /\b#{w}/i =~ txt
   end
 
   def MagicWord.todays_word
@@ -16,7 +16,7 @@ module MagicWord
     srand( Date.today.yday() )
 
     words = []
-    f = File.new( $conf[:dir][:root] + "dict/magicwords", "r" )
+    f = File.new( $conf[:dir][:root] + "/dict/magicwords", "r" )
     f.each{|line| words << line.chomp }
 
     return words[ rand( words.length ) ]

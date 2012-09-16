@@ -4,9 +4,12 @@ nick = ARGV[0]
 
 if nick
 
+  ty = [ 'eight_ender', 'ol_qwerty_bastrd', 'HAM_RADIO', 'tyler' ]
+  nick = 'tyler' if ty.index( nick )
+
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
 
-  log = $conf[:dir][:root] + "dict/q.#{nick}.log"
+  log = $conf[:dir][:root] + "/dict/q.#{nick}.log"
   s = ''
 
   if File.exists? log
@@ -17,7 +20,7 @@ if nick
 
     s += '  ' + phrases[rand(phrases.length)] + "\n"
     s += '  ' + phrases[rand(phrases.length)] + "\n"
-    s += '  ' + phrases[rand(phrases.length)] + "\n     - #{nick}"
+    s += '  ' + phrases[rand(phrases.length)] + "\n     -#{nick}"
 
   else
     s = 'no log for that user'

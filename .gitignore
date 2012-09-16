@@ -1,4 +1,5 @@
 log/*.log
+log/*.tgz
 conf.rb
 *.swp
 .idea/*
@@ -6,3 +7,5 @@ conf.rb
 dict/derjur.log
 dict/*.log
 *~
+dict/bak
+db/config.yml

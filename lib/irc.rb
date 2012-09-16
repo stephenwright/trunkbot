@@ -54,7 +54,7 @@ class IRC < Interface
   def log ( msg, chan=@chan )
     if $conf[:log][:enabled]
       log_dir = $conf[:log][:dir]
-      f = File.open( "#{log_dir}#{chan.sub('#','')}.#{Date.today}.log", "a" )
+      f = File.open( "#{log_dir}/#{chan.sub('#','')}.#{Date.today}.log", "a" )
       f.write( "[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n" )
       f.close
     end
@@ -63,7 +63,7 @@ class IRC < Interface
   def log_raw ( msg )
     if $conf[:log][:raw]
       log_dir = $conf[:log][:dir]
-      f = File.open( "#{log_dir}raw.#{Date.today}.log", "a" )
+      f = File.open( "#{log_dir}/raw.#{Date.today}.log", "a" )
       f.write( "[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n" )
       f.close
     end
@@ -122,6 +122,10 @@ class IRC < Interface
     send "KICK #{chn} #{usr} :#{msg}"
   end
   
+  # invite a user to target channel
+  def invite ( usr, chn )
+    send "INVITE #{usr} #{chn}"
+  end
   
   # Deal with messages from the server
   # ===========================================================================
@@ -168,6 +172,10 @@ class IRC < Interface
       trg = prm[1]
       msg = prm[2]
       log "#{usr} KICK #{chn} #{trg} #{msg}", chn
+      if usr == "derjur" && trg == "beeeee"
+        kick chn, usr, "stop that"
+        invite chn, trg
+      end
 
     when 'TOPIC' # <channel> :<topic>
       log "#{usr} TOPIC #{params}", chn
@@ -176,7 +184,7 @@ class IRC < Interface
       prm = params.split(" ", 2)
       trg = prm[0];
       chn = prm[1].sub(/^:/, '')
-      send "JOIN #{chn}"
+      join chn
       log "#{usr} INVITE #{trg} :#{chn}"
 
     when 'QUIT' 
@@ -217,16 +225,12 @@ class IRC < Interface
         kick trg, usr, "*zap*"
         return
       end
-      
+
       case msg
       when /^the game$/i
         kick trg, usr, "you know what you did..."
         
-      when /(.+?)\s?>\s?(\w+)$/
-        @log.debug "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
-        do_cmd $1, usr, $2
-
-      when /^(#{@nick}[:,]?\s|!)(.+)/
+      when /^(#{@nick}[:,]?\s?|!)(.+)/
         do_cmd $2, usr, trg
       end
     end
@@ -235,10 +239,15 @@ class IRC < Interface
   # from: the message sender
   # to:   the message recipient, either the channel the message is sent in
   #       or the bot himself if the message is a direct/private one
-  def do_cmd ( msg, from, to )
+  def do_cmd ( msg, from, trg )
     @log.trace "[ do_cmd #{msg} ]"
+    if /(.+?)>\s?(#?\w+)$/ =~ msg
+        @log.debug "[ Directed Command; cmd:#{$1}, trg:#{$2} ]"
+		msg = $1
+		trg = $2
+	end
     out = @bot.process msg
-    out.split("\n").each {|line| privmsg to, line; sleep(0.5); }
+    out.split("\n").each {|line| privmsg trg, line; sleep(0.5); }
   end
   
 end
