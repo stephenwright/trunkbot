@@ -9,7 +9,8 @@ begin
   raise 'wrong argument count' if ARGV.length != 2
 
   ty = [ 'eight_ender', 'ol_qwerty_bastrd', 'HAM_RADIO', 'tyler' ]
-  nick = 'tyler' if ty.index( nick )
+  n1 = 'tyler' if ty.index( n1 )
+  n2 = 'tyler' if ty.index( n2 )
 
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
 
@@ -25,16 +26,19 @@ begin
   f = File.new( log1, "r" )
   f.each{|line| phrases << line.chomp }
 
-  convo[0] = "#{n1}: #{phrases[rand(phrases.length)]}"
-  convo[2] = "#{n1}: #{phrases[rand(phrases.length)]}"
-  convo[4] = "#{n1}: #{phrases[rand(phrases.length)]}"
+  nick = n1.rjust(9)
 
+  convo[0] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
+  convo[2] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
+  convo[4] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
+
+  nick = n2.rjust(9)
   phrases = []
   f = File.new( log2, "r" )
   f.each{|line| phrases << line.chomp }
 
-  convo[1] = "#{n2}: #{phrases[rand(phrases.length)]}"
-  convo[3] = "#{n2}: #{phrases[rand(phrases.length)]}"
+  convo[1] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
+  convo[3] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
 
   puts convo.join("\n")
 
