@@ -8,3 +8,4 @@ dict/derjur.log
 dict/*.log
 *~
 dict/bak
+db/config.yml
