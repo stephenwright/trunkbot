@@ -6,10 +6,10 @@ Dir.chdir $conf[:dir][:root]
 require "socket"
 require "thread"
 
-pk = ARGV[0]
+pk = ARGV.join(' ')
 puts "#{pk}"
 
-UNIXSocket.open( 'tmp/bot.socket' ) {|sock|
+UNIXSocket.open( '/tmp/bot.socket' ) {|sock|
   sock.puts "#{pk}"
   while ( resp = sock.gets )
     break if resp =~ /---done---/

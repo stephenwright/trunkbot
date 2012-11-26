@@ -8,8 +8,8 @@ class Bot
   
   # Constructor
   def initialize nick
-    require "./lib/eight.rb"
-    require "./lib/magicword.rb"
+    require_relative "../lib/eight.rb"
+    require_relative "../lib/magicword.rb"
     require "escape"
     
     @nick = nick
@@ -49,9 +49,8 @@ if __FILE__ == $0 then
   
   require "rubygems"
   require "bundler/setup"
-  require File.join( File.dirname( __FILE__ ), '../conf.rb' )
-  Dir.chdir $conf[:dir][:root]
-  require "lib/logger.rb"
+  require_relative '../conf.rb'
+  require_relative "../lib/logger.rb"
 
   #puts Bot.new( 'blank' ).process ARGV.join(" ")
   
@@ -86,7 +85,8 @@ if __FILE__ == $0 then
     end
   }
   
-  f = 'tmp/bot.socket'
+  Dir.chdir $conf[:dir][:root]
+  f = '/tmp/bot.socket'
   File.unlink( f ) if File.exists?( f ) && File.socket?( f )
   server = UNIXServer.new( f )
   while !@done
