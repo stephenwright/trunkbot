@@ -19,7 +19,7 @@ class IRC < Interface
       ready = select( [@socket], nil, nil, nil )
       next unless ready
 
-      # Handle messages received throught the socket
+      # Handle messages received through the socket
       if ready[0].include? @socket then
         return if @socket.eof
         receive_message( @socket.gets )
@@ -38,7 +38,7 @@ class IRC < Interface
         return if $stdin.eof
         send $stdin.gets
 
-      # Handle messages received throught the socket
+      # Handle messages received through the socket
       elsif ready[0].include? @socket then
         return if @socket.eof
         receive_message(@socket.gets)
@@ -117,12 +117,12 @@ class IRC < Interface
     send "PRIVMSG #{to} :#{msg}"
   end
   
-  # kick a user from the target channel
+  # Kick a user from the target channel
   def kick ( chn, usr, msg )
     send "KICK #{chn} #{usr} :#{msg}"
   end
   
-  # invite a user to target channel
+  # Invite a user to target channel
   def invite ( usr, chn )
     send "INVITE #{usr} #{chn}"
   end
@@ -149,8 +149,8 @@ class IRC < Interface
   def process_message ( source, action, params )
     @log.trace "[ process_message #{source} #{action} #{params} ]"
 
-    usr = source.split('!')[0] # pull nick from "nick!user@domain"
-    chn = params.split(' ')[0] # channel specific actions have channel name as 1st parameter
+    usr = source.split('!')[0] # Pull nick from "nick!user@domain"
+    chn = params.split(' ')[0] # Channel specific actions have channel name as 1st parameter
 
     case action
     when 'PRIVMSG' 
@@ -212,10 +212,10 @@ class IRC < Interface
     return if usr == @nick
     
     if trg == @nick
-      # message to bot
+      # Message to bot
       do_cmd msg, usr, usr
     else
-      # message to channel
+      # Message to channel
       if MagicWord.is_in? msg
         privmsg trg, "EXTERMINATE."
         kick trg, usr, "*zap*"
@@ -232,8 +232,8 @@ class IRC < Interface
     end
   end
 
-  # from: the message sender
-  # to:   the message recipient, either the channel the message is sent in
+  # From: the message sender
+  # To:   the message recipient, either the channel the message is sent in
   #       or the bot himself if the message is a direct/private one
   def do_cmd ( msg, from, trg )
     @log.trace "[ do_cmd #{msg} ]"
