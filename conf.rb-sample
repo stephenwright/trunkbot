@@ -25,6 +25,6 @@ $conf[:log] = {
   :raw => false,
   :enabled => false,
 
-  # should output go to a logfile instead of of stdout?
+  # Should output go to a logfile instead of stdout?
   :output => false
 }

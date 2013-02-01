@@ -172,10 +172,6 @@ class IRC < Interface
       trg = prm[1]
       msg = prm[2]
       log "#{usr} KICK #{chn} #{trg} #{msg}", chn
-      if usr == "derjur" && trg == "beeeee"
-        kick chn, usr, "stop that"
-        invite chn, trg
-      end
 
     when 'TOPIC' # <channel> :<topic>
       log "#{usr} TOPIC #{params}", chn
@@ -228,7 +224,7 @@ class IRC < Interface
 
       case msg
       when /^the game$/i
-        kick trg, usr, "you know what you did..."
+        kick trg, usr, "You know what you did..."
         
       when /^(#{@nick}[:,]?\s?|!)(.+)/
         do_cmd $2, usr, trg
