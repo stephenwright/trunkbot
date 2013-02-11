@@ -8,7 +8,7 @@ require "socket"
 # the IRC class 
 class IRC < Interface
   
-  attr_accessor :serv, :port, :nick, :pass
+  attr_accessor :serv, :port, :nick, :pass, :chan
 
   # the Main Loop
   # ===========================================================================
@@ -16,37 +16,41 @@ class IRC < Interface
   def start
     @running = true
     while @running
-      ready = select( [@socket], nil, nil, nil )
-      next unless ready
+      begin
+        ready = select( [@socket], nil, nil, 300 )
+        raise 'timeout' if ready.nil?
+        next unless ready
 
-      # Handle messages received through the socket
-      if ready[0].include? @socket then
-        return if @socket.eof
-        receive_message( @socket.gets )
+        # Handle messages received through the socket
+        if ready[0].include? @socket then
+          raise 'disco' if @socket.eof
+          receive_message( @socket.gets )
+        end
+      rescue StandardError => e
+        @log.error "error: #{e.message}"
+        do_connect
       end
     end
   end
 
-  def main_loop
-    loop do
-
-      ready = select([@socket, $stdin], nil, nil, nil)
-      next unless ready
-
-      # Handle command line input
-      if ready[0].include? $stdin then
-        return if $stdin.eof
-        send $stdin.gets
-
-      # Handle messages received through the socket
-      elsif ready[0].include? @socket then
-        return if @socket.eof
-        receive_message(@socket.gets)
-
-      end
-
-    end
-  end
+#  def main_loop
+#    loop do
+#      ready = select([@socket, $stdin], nil, nil, nil)
+#      next unless ready
+#
+#      # Handle command line input
+#      if ready[0].include? $stdin then
+#        return if $stdin.eof
+#        send $stdin.gets
+#
+#      # Handle messages received through the socket
+#      elsif ready[0].include? @socket then
+#        return if @socket.eof
+#        receive_message(@socket.gets)
+#
+#      end
+#    end
+#  end
 
   # Logging
   # ===========================================================================
@@ -80,14 +84,20 @@ class IRC < Interface
   # ===========================================================================
   
   # Initialize connection to IRC server
-  def connect ( host, nick, pass=nil, port=6667 )
+  def connect ( host, nick, pass=nil, chan="", port=6667 )
     @log.info "[ connect ]"
     
     @host = host
     @nick = nick
     @pass = pass
     @port = port
+    @chan = chan
     
+    do_connect
+  end
+  
+  # Open the connection to the server
+  def do_connect
     @log.info "#{@host} #{@port}"
     
     @socket = TCPSocket.open( @host, @port )
@@ -99,12 +109,14 @@ class IRC < Interface
       send "PASS #{@pass}"
       send "PRIVMSG NickServ :identify #{@pass}"
     end
+    
+    join @chan
   end
 
   # Push messages to the server
-  def send ( s )
-    @log.info "--> #{s}\n"
-    @socket.send "#{s}\n", 0
+  def send ( msg )
+    @log.info "--> #{msg}\n"
+    @socket.send "#{msg}\n", 0
   end
   
   # Join specified channel
@@ -131,17 +143,19 @@ class IRC < Interface
   # ===========================================================================
 
   # Receive messages sent from the server
-  def receive_message ( s )
-    s.strip!
-    if /^PING :(.+)$/i =~ s # Reply to PINGs to keep the connection alive
+  def receive_message ( msg )
+    msg.strip!
+    if /^PING :(.+)$/i =~ msg # Reply to PINGs to keep the connection alive
       send "PONG :#{$1}"
+      @log.info "ping received at [#{Time.now.strftime('%H:%M:%S')}] \n"
+      
     else
-      @log.info "<-- #{s}\n"
-      log_raw s
+      @log.info "<-- #{msg}\n"
+      log_raw msg
   
       # Messages from Server should come as follows:
       # :<nick>!<userName>@<userDomain> <action> <action-specific-parameters>
-      process_message $1, $2, $3 if /^:(.+?)\s(.+?)\s(.*)/ =~ s
+      process_message $1, $2, $3 if /^:(.+?)\s(.+?)\s(.*)/ =~ msg
     end
   end
   

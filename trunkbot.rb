@@ -45,9 +45,8 @@ class TrunkBot
     host = $conf[:irc][:host]
     nick = $conf[:irc][:nick]
     pass = $conf[:irc][:pass]
-    @irc.connect host, nick, pass
-    @irc.join $conf[:irc][:chan]
-	#@irc.privmsg "chanserv", "op #b33r_time trunkbot"
+    chan = $conf[:irc][:chan]
+    @irc.connect host, nick, pass, chan
     
     begin
       irc_thread = Thread.new { 
