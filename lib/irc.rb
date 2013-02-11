@@ -33,25 +33,6 @@ class IRC < Interface
     end
   end
 
-#  def main_loop
-#    loop do
-#      ready = select([@socket, $stdin], nil, nil, nil)
-#      next unless ready
-#
-#      # Handle command line input
-#      if ready[0].include? $stdin then
-#        return if $stdin.eof
-#        send $stdin.gets
-#
-#      # Handle messages received through the socket
-#      elsif ready[0].include? @socket then
-#        return if @socket.eof
-#        receive_message(@socket.gets)
-#
-#      end
-#    end
-#  end
-
   # Logging
   # ===========================================================================
 
