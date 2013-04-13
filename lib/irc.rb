@@ -1,9 +1,17 @@
 # @file irc.rb
 
-require "rubygems"
-require "bundler/setup"
-require "date"
-require "socket"
+require 'rubygems'
+require 'bundler/setup'
+require 'date'
+require 'socket'
+
+require 'active_record'
+require 'yaml'
+require_relative('../conf.rb' )
+ActiveRecord::Base.establish_connection(YAML::load(File.open("#{File.dirname(File.expand_path(__FILE__))}/../db/config.yml")))
+
+class IrcMessage < ActiveRecord::Base
+end
 
 # the IRC class 
 class IRC < Interface
@@ -43,6 +51,14 @@ class IRC < Interface
       f.write( "[#{Time.now.strftime('%H:%M:%S')}] #{msg}\n" )
       f.close
     end
+  end
+
+  def log_db ( usr, trg, msg )
+    irc_message = IrcMessage.new
+    irc_message.name = usr
+    irc_message.receiver = trg
+    irc_message.text = msg
+    irc_message.save
   end
 
   def log_raw ( msg )
@@ -128,7 +144,7 @@ class IRC < Interface
     msg.strip!
     if /^PING :(.+)$/i =~ msg # Reply to PINGs to keep the connection alive
       send "PONG :#{$1}"
-      @log.info "ping received at [#{Time.now.strftime('%H:%M:%S')}] \n"
+      @log.trace "ping received at [#{Time.now.strftime('%H:%M:%S')}] \n"
       
     else
       @log.info "<-- #{msg}\n"
@@ -204,6 +220,8 @@ class IRC < Interface
     @log.trace "[ action_msg ]"
     
     log "#{trg}.#{usr}:#{msg}", trg
+    log_db usr, trg, msg
+
     return if usr == @nick
     
     if trg == @nick
