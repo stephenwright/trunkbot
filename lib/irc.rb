@@ -99,14 +99,17 @@ class IRC < Interface
     
     @socket = TCPSocket.open( @host, @port )
     
+    if @pass
+      send "PASS #{@pass}"
+    end
+    
     send "NICK #{@nick}"
     send "USER TrunkBot bird trunkbit.com work"
     
     if @pass
-      send "PASS #{@pass}"
       send "PRIVMSG NickServ :identify #{@pass}"
     end
-    
+
     join @chan
   end
 
@@ -219,8 +222,13 @@ class IRC < Interface
   def action_msg ( msg, usr, trg )
     @log.trace "[ action_msg ]"
     
-    log "#{trg}.#{usr}:#{msg}", trg
-    log_db usr, trg, msg
+    log "#{trg}.#{usr}:#{msg}", trg 
+    begin
+      log_db usr, trg, msg
+    rescue Exception => e  
+      puts e.message  
+      puts e.backtrace.inspect  
+    end  
 
     return if usr == @nick
     
