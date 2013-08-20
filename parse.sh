@@ -18,7 +18,7 @@ done
 cat dict/tmp.log | sort -u > dict/q.tyler.log
 
 # special handling for the bee
-NICKS=('beee' 'beeeee' 'beeeee_' 'beeeee__')
+NICKS=('beeee' 'beeeee' 'beeeee_' 'beeeee__')
 echo '' > dict/tmp.log
 for n in "${NICKS[@]}"; do
 	grep "b33r_time.${n}:" log/**/b33r* | sed "s/^log.*\/b33r_time.*${n}://" >> dict/tmp.log
