@@ -11,7 +11,7 @@ ActiveRecord::Base.establish_connection(
 
 class IrcMessage  < ActiveRecord::Base
   scope :b33r, -> { where receiver: '#b33r_time' }
-  scope :contains, ->(term) { where('text ilike ?', "%#{term}%") }
+  scope :contains, ->(term) { where('text ~* ?', "\\y#{term}\\y") }
 end
 
 messages = IrcMessage.b33r
@@ -22,7 +22,11 @@ if ARGV.length > 0
 end
 
 msg = messages.first(offset: rand(messages.count))
-quote = msg.text.strip.gsub(/"/, "'")
 
-puts "\"#{quote}\"  -#{msg.name}"
+if msg
+  quote = msg.text.strip.gsub(/"/, "'")
+  puts "\"#{quote}\"  -#{msg.name}"
+else
+  puts "no quote found."
+end
 
