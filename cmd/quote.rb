@@ -17,7 +17,8 @@ end
 messages = IrcMessage.b33r
 
 if ARGV.length > 0
-  messages = messages.contains(ARGV[0])
+  query = ARGV.join(" ")
+  messages = messages.contains(query)
 end
 
 msg = messages.first(offset: rand(messages.count))
