@@ -1,6 +1,7 @@
 log/*.log
 log/*.tgz
 conf.rb
+cifs*
 *.swp
 .idea/*
 .DS_Store
