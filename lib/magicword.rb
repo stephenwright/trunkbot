@@ -7,7 +7,7 @@ module MagicWord
 
   def MagicWord.is_in? (txt)
     w = MagicWord.todays_word
-    return /\b#{w}/i =~ txt
+    return /\b#{w}\b/i =~ txt
   end
 
   def MagicWord.todays_word
