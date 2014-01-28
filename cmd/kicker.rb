@@ -38,7 +38,7 @@ def readLogs(path,chan)
 
         # get kicker and kickee
         usr = $1
-  	    trg = $3
+        trg = $3
 
         # add/increment the user's kick count
         if kicks[usr] == nil then kicks[usr] = 1 else kicks[usr] += 1 end
