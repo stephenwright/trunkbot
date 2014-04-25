@@ -239,7 +239,7 @@ class IRC < Interface
       # Message to channel
       if MagicWord.is_in? msg
         privmsg trg, "EXTERMINATE."
-        kick trg, usr, '*zap*' if ['dr_summer','derjur','ol_qwerty_bastrd'].include?(usr)
+        kick trg, usr, '*zap*' #if ['dr_summer','derjur','ol_qwerty_bastrd'].include?(usr)
         return
       end
 
