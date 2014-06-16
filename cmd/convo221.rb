@@ -12,6 +12,9 @@ begin
   n1 = 'tyler' if ty.index( n1 )
   n2 = 'tyler' if ty.index( n2 )
 
+  n1 = 'beeeee' if n1.start_with?('beeee')
+  n2 = 'beeeee' if n2.start_with?('beeee')
+
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
 
   log1 = $conf[:dir][:root] + "/dict/q.#{n1}.log"
