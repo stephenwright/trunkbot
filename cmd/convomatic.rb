@@ -31,17 +31,17 @@ begin
 
   nick = n1.rjust(9)
 
-  convo[0] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
-  convo[2] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
-  convo[4] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
+  convo[0] = " #{nick}| #{phrases[rand(phrases.length)]}"
+  convo[2] = " #{nick}| #{phrases[rand(phrases.length)]}"
+  convo[4] = " #{nick}| #{phrases[rand(phrases.length)]}"
 
   nick = n2.rjust(9)
   phrases = []
   f = File.new( log2, "r" )
   f.each{|line| phrases << line.chomp }
 
-  convo[1] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
-  convo[3] = " [#{nick}]: #{phrases[rand(phrases.length)]}"
+  convo[1] = " #{nick}| #{phrases[rand(phrases.length)]}"
+  convo[3] = " #{nick}| #{phrases[rand(phrases.length)]}"
 
   puts convo.join("\n")
 

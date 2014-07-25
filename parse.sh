@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NICKS=('TuxOtaku' 'derjur' 'dr_summer' 'chelsea_' 'vladTO' 'Turdburg')
+NICKS=('TuxOtaku' 'derjur' 'dr_summer' 'chelsea_' 'vladTO' 'Turdburg', 'apow')
 
 for n in "${NICKS[@]}"; do
 	grep "b33r_time.${n}:" log/**/b33r* | sed "s/^log.*\/b33r_time.*${n}://" > dict/tmp.log
