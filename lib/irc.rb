@@ -72,8 +72,8 @@ class IRC < Interface
 
   # Constructor
   def initialize ( bot )
-    @log = Logger.new()
-    @log.level = Logger::DEBUG
+    @log = BotLogger.new()
+    @log.level = BotLogger::DEBUG
     @bot = bot
   end
 
@@ -232,7 +232,7 @@ class IRC < Interface
 
     return if usr == @nick
     
-    if trg == @nick
+    if trg.casecmp(@nick) == 0
       # Message to bot
       do_cmd msg, usr, usr
     else

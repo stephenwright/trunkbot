@@ -13,7 +13,7 @@ class Bot
     require "escape"
     
     @nick = nick
-    @log = Logger.new()
+    @log = BotLogger.new()
   end
 
   # Process commands 
@@ -50,7 +50,7 @@ if __FILE__ == $0 then
   require "rubygems"
   require "bundler/setup"
   require_relative '../conf.rb'
-  require_relative "../lib/logger.rb"
+  require_relative "./logger.rb"
 
   #puts Bot.new( 'blank' ).process ARGV.join(" ")
   

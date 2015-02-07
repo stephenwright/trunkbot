@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-class Logger
+class BotLogger
   
   # Possible log levels
   NONE  = 0
