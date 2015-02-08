@@ -232,7 +232,7 @@ class IRC < Interface
 
     return if usr == @nick
     
-    if trg.casecmp(@nick) == 0
+    if trg == nick
       # Message to bot
       do_cmd msg, usr, usr
     else
@@ -247,7 +247,7 @@ class IRC < Interface
       when /^the game$/i
         kick trg, usr, "You know what you did..."
         
-      when /^(#{@nick}[:,]?\s?|!)(.+)/
+      when /^(#{@nick}[:,]?\s?|!)(.+)/i
         do_cmd $2, usr, trg
       end
     end
