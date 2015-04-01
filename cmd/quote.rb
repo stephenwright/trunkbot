@@ -21,7 +21,7 @@ if ARGV.length > 0
   messages = messages.contains(query)
 end
 
-msg = messages.offset(rand(messages.count)).first()
+msg = messages.offset(rand(messages.count)).first
 
 if msg
   quote = msg.text.strip.gsub(/"/, "'")
