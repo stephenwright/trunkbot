@@ -47,15 +47,15 @@ end
 # Main
 if __FILE__ == $0 then
   
-  require "rubygems"
-  require "bundler/setup"
+  require 'rubygems'
+  require 'bundler/setup'
   require_relative '../conf.rb'
-  require_relative "./logger.rb"
+  require_relative './logger.rb'
 
   #puts Bot.new( 'blank' ).process ARGV.join(" ")
   
-  require "socket"
-  require "thread"
+  require 'socket'
+  require 'thread'
   
   $b = Bot.new( 'funkbot' );
   @done = false
@@ -64,7 +64,7 @@ if __FILE__ == $0 then
     case cmd
     when /quit/i
       @done = true
-      puts "quiting"
+      puts 'quiting'
       exit
     end
     return $b.process cmd
@@ -74,7 +74,7 @@ if __FILE__ == $0 then
     loop do
       ready = select([$stdin], nil, nil, nil)
       next unless ready
-      cmd = ""
+      cmd = ''
       if ready[0].include? $stdin then
         # Handle command line input
         return if $stdin.eof
@@ -92,15 +92,16 @@ if __FILE__ == $0 then
   while !@done
     sock = server.accept 
     Thread.new {
-      puts "socket open"
+      puts 'socket open'
       while cmd = sock.gets
           sock.puts proc cmd
-          sock.puts "---done---"
+          sock.puts '---done---'
       end
-      puts "done"
+      puts 'done'
       sock.close
     }
   end
   File.delete( f )
 
 end
+
