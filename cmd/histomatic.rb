@@ -4,8 +4,9 @@ nick = ARGV[0]
 
 if nick
 
-  ty = [ 'eight_ender', 'ol_qwerty_bastrd', 'HAM_RADIO', 'tyler' ]
-  nick = 'tyler' if ty.index( nick )
+  nick = 'tyler' if [ 'eight_ender', 'ol_qwerty_bastrd', 'HAM_RADIO', 'tyler' ].index nick
+  nick = 'azend' if nick == 'azend|vps'
+  nick = 'beeeee' if nick.start_with? 'bee'
 
   require File.join( File.dirname( __FILE__ ), '../conf.rb' )
 
