@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'bundler/setup'
+require 'thread'
+require 'yaml'
+
+root_path = File.expand_path('..', File.dirname(__FILE__))
+$LOAD_PATH.unshift(root_path) unless $LOAD_PATH.include?(root_path)
+
+require 'lib/db'
+require 'trunkbot'
+
+# store the process id
+f = File.open( "tmp/pid", "w" )
+f.write( "#{Process.pid}\n" )
+f.close
+
+conf = YAML::load_file('config/config.yml')
+
+Trunkbot::Irc.configure do |config|
+  config.host = conf["irc"]["host"]
+  config.port = conf["irc"]["port"]
+  config.nick = conf["irc"]["nick"]
+  config.pass = conf["irc"]["pass"]
+  config.chan = conf["irc"]["chan"]
+end
+
+client = Trunkbot::Irc::Client.new(Bot.new)
+
+begin
+  irc_thread = Thread.new { client.start }
+  irc_thread.join
+
+rescue StandardError => e
+  p e.message
+  p e.backtrace.join("\n")
+  retry
+
+end

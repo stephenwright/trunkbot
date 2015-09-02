@@ -1,22 +1,22 @@
- 
-# Installation
- 
-Trunkbot requires bundler to be installed.  
+# Trunkbot
+
+## Installation
+
+Trunkbot requires bundler to be installed.
 
 
-# Configuration
+## Configuration
 
 Copy the sample config file, and edit the options to
 configure the bot to your liking, be sure to set a name for the bot,
 and specify what channel and server you want it to join.
 
-    $ cp conf.rb-sample conf.rb
+    $ cp config.yml-sample config.yml
 
-# Usage
+## Usage
 
 Run the bot.
 
-    $ ./trunkbot.rb
+    $ ./bin/start
 
 Enjoy.
-
