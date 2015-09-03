@@ -1,0 +1,12 @@
+# Trunkbot Configuration
+
+version: 2.0.0
+
+# IRC Settings
+
+irc:
+  host: irc.host.net
+  port: 6667
+  nick: bot_name
+  pass: bot_pass
+  chan: "#chan1,#chanN"

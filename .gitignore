@@ -1,11 +1,8 @@
+config/*.yml
+data/*.log
 log/*.log
 log/*.tgz
-conf.rb
 *.swp
 .idea/*
 .DS_Store
-dict/derjur.log
-dict/*.log
 *~
-dict/bak
-db/config.yml

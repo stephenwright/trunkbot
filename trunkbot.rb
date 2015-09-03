@@ -1,73 +1,30 @@
-#!/usr/bin/env ruby
-# @file trunkbot.rb
-#
-# TrunkBot - IRC Bot 
-# The do everything wonder bot!
+module Trunkbot
+  require 'trunkbot/logger'
+  require 'trunkbot/irc'
+  require 'trunkbot/bot'
+  require 'trunkbot/cmd'
 
-# include required ruby gems and libraries
-require "rubygems"
-require "bundler/setup"
-require "thread"
-
-# include project configuration
-conf_file = File.join( File.dirname( __FILE__ ), 'conf.rb' )
-puts conf_file
-require conf_file
-
-# set working directory to project root
-Dir.chdir $conf[:dir][:root]
-
-puts "pwd> #{$conf[:dir][:root]}"
-
-# include project libraries
-require "./lib/logger.rb"
-require "./lib/bot.rb"
-require "./lib/interface.rb"
-require "./lib/irc.rb"
-
-# main application object
-class TrunkBot
-
-  def initialize 
-    @bot = Bot.new( $conf[:irc][:nick] )
-    @irc = IRC.new( @bot )
+  def self.known_nicks
+    [
+      %w{TuxOtaku TuxWork TuxAway},
+      %w{azend azend|vps},
+      %w{derjur},
+      %w{dr_summer dr_notworking straw_man},
+      %w{chelsea_ chelsea__},
+      %w{vladTO},
+      %w{Turdburg},
+      %w{apow},
+      %w{countryHick},
+      %w{beeeee beeee beeeee_ beeeee__ beeeee___ beeeee____},
+      %w{ol_qwerty_bastrd eight_ender HAM_RADIO tyler}
+    ]
   end
-  
-  # Get things rolling
-  def run
-    
-    # store the process id
-    f = File.open( "tmp/pid", "w" )
-    f.write( "#{Process.pid}\n" )
-    f.close
-    
-    # hook up the irc interface
-    host = $conf[:irc][:host]
-    nick = $conf[:irc][:nick]
-    pass = $conf[:irc][:pass]
-    chan = $conf[:irc][:chan]
-    @irc.connect host, nick, pass, chan
-    
-    begin
-      irc_thread = Thread.new { 
-        @irc.start
-      }
-      irc_thread.join
-  
-    rescue StandardError => e
-      puts e.message
-      puts e.backtrace.join("\n")
-      retry
-    
+
+  def self.alias(nick)
+    self.known_nicks.each do |nicks|
+      return nicks.first if nicks.include? nick
     end
+    return nick
   end
-  
-end
 
-# Main
-if __FILE__ == $0 then
-  
-  tbot = TrunkBot.new.run()
-  
 end
-

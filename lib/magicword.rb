@@ -1,6 +1,9 @@
 #!/usr/bin/env ruby
 
-require File.join( File.dirname( __FILE__ ), '../conf.rb' )
+if __FILE__ == $0
+  root_path = File.expand_path('..', File.dirname(__FILE__))
+  $LOAD_PATH.unshift(root_path) unless $LOAD_PATH.include?(root_path)
+end
 
 module MagicWord
   require 'date'
@@ -16,7 +19,7 @@ module MagicWord
     srand( Date.today.yday() )
 
     words = []
-    f = File.new( $conf[:dir][:root] + "/dict/magicwords", "r" )
+    f = File.new( "data/magicwords", "r" )
     f.each{|line| words << line.chomp }
 
     return words[ rand( words.length ) ]

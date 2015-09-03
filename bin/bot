@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+require 'socket'
+require 'thread'
+
+root_path = File.expand_path('..', File.dirname(__FILE__))
+cmd_path = "#{root_path}/cmd"
+
+Dir.chdir root_path
+
+msg = ARGV.join(' ')
+
+return if msg.nil? || msg.empty?
+#p ">> #{msg}"
+
+UNIXSocket.open '/tmp/bot.socket' do |sock|
+  sock.puts "#{msg}"
+  while ( resp = sock.gets )
+    break if resp =~ /---done---/
+    puts "<< #{resp}"
+  end
+end
