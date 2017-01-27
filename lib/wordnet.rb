@@ -1,4 +1,8 @@
 #!/usr/bin/env ruby
+#
+# WordNet® is a large lexical database of English. 
+# http://wordnet.princeton.edu
+#
 module WordNet
 
   class Dictionary
