@@ -1,5 +1,7 @@
 module Trunkbot
   require 'trunkbot/logger'
+  require 'trunkbot/model/irc_message'
+  require 'trunkbot/model/note'
   require 'trunkbot/irc'
   require 'trunkbot/bot'
   require 'trunkbot/cmd'

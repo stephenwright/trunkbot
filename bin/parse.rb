@@ -4,6 +4,7 @@ root_path = File.expand_path('..', File.dirname(__FILE__))
 $LOAD_PATH.unshift(root_path) unless $LOAD_PATH.include?(root_path)
 Dir.chdir root_path
 
+require 'lib/db'
 require 'trunkbot'
 
 def nickParse(nicks, chan='b33r_time')
