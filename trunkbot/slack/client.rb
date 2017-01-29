@@ -6,7 +6,6 @@ module Trunkbot
 
       def initialize(bot)
         @bot = bot
-
         @client = ::Slack::RealTime::Client.new
 
         @client.on :hello do
@@ -26,17 +25,16 @@ module Trunkbot
 
       def receive_message(data)
         puts "data: #{data}"
-
         return if data.subtype == 'bot_message'
-
-        msg = ::Slack::Messages::Formatting.unescape(data.text)
-        puts "message received: #{msg}"
 
         input = nil
         if !@client.ims[data.channel].nil?
           #direct message
           input = data.text
         else
+          msg = ::Slack::Messages::Formatting.unescape(data.text)
+          puts "message received: #{msg}"
+
           case msg
           when /^(@#{@client.self.id}|!)(.+)/
             input = $2
