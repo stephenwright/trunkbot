@@ -13,9 +13,9 @@ if nick
     f = File.new( log, "r" )
     f.each{|line| phrases << line.chomp }
 
-    s += '  ' + phrases[rand(phrases.length)] + "\n"
-    s += '  ' + phrases[rand(phrases.length)] + "\n"
-    s += '  ' + phrases[rand(phrases.length)] + "\n     -#{nick}"
+    s += '> ' + phrases[rand(phrases.length)] + "\n"
+    s += '> ' + phrases[rand(phrases.length)] + "\n"
+    s += '> ' + phrases[rand(phrases.length)] + "\n     -#{nick}"
 
   else
     s = "no log found for #{nick}"
