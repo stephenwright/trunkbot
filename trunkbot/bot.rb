@@ -19,8 +19,11 @@ class Bot
   require 'lib/magicword'
   require 'escape'
 
+  attr_accessor :name
+
   # Constructor
-  def initialize
+  def initialize(name=nil)
+    @name = name || 'trunkbot'
     @log = Trunkbot::Logger.new
   end
 

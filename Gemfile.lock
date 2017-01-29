@@ -17,13 +17,35 @@ GEM
     arel (6.0.3)
     builder (3.2.2)
     escape (0.0.4)
+    eventmachine (1.2.1)
+    faraday (0.11.0)
+      multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.11.0.1)
+      faraday (>= 0.7.4, < 1.0)
+    faye-websocket (0.10.6)
+      eventmachine (>= 0.12.0)
+      websocket-driver (>= 0.5.1)
+    gli (2.15.0)
+    hashie (3.4.6)
     i18n (0.7.0)
     json (1.8.3)
     minitest (5.8.0)
+    multipart-post (2.0.0)
     pg (0.18.2)
+    slack-ruby-client (0.7.8)
+      activesupport
+      faraday (>= 0.9)
+      faraday_middleware
+      gli
+      hashie
+      json
+      websocket-driver
     thread_safe (0.3.5)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    websocket-driver (0.6.5)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.2)
     xml-simple (1.1.5)
 
 PLATFORMS
@@ -32,9 +54,12 @@ PLATFORMS
 DEPENDENCIES
   activerecord
   escape
+  eventmachine
+  faye-websocket
   pg
+  slack-ruby-client
   tzinfo
   xml-simple
 
 BUNDLED WITH
-   1.10.6
+   1.12.5

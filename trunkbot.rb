@@ -3,6 +3,7 @@ module Trunkbot
   require 'trunkbot/model/irc_message'
   require 'trunkbot/model/note'
   require 'trunkbot/irc'
+  require 'trunkbot/slack/client'
   require 'trunkbot/bot'
   require 'trunkbot/cmd'
 

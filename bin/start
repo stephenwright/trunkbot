@@ -4,6 +4,7 @@ require 'rubygems'
 require 'bundler/setup'
 require 'thread'
 require 'yaml'
+require 'slack-ruby-client'
 
 root_path = File.expand_path('..', File.dirname(__FILE__))
 $LOAD_PATH.unshift(root_path) unless $LOAD_PATH.include?(root_path)
@@ -18,6 +19,10 @@ f.close
 
 conf = YAML::load_file('config/config.yml')
 
+Slack.configure do |config|
+  config.token = conf['slack']['token']
+end
+
 Trunkbot::Irc.configure do |config|
   config.host = conf["irc"]["host"]
   config.port = conf["irc"]["port"]
@@ -26,7 +31,9 @@ Trunkbot::Irc.configure do |config|
   config.chan = conf["irc"]["chan"]
 end
 
-client = Trunkbot::Irc::Client.new(Bot.new)
+bot = Bot.new
+#client = Trunkbot::Irc::Client.new(bot)
+client = Trunkbot::Slack::Client.new(bot)
 
 begin
   irc_thread = Thread.new { client.start }

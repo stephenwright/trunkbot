@@ -7,3 +7,7 @@ gem 'tzinfo'
 gem 'xml-simple'
 #gem 'mysql'
 gem 'pg'
+
+gem 'slack-ruby-client'
+gem 'eventmachine'
+gem 'faye-websocket'
