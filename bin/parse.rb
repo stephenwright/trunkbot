@@ -12,10 +12,11 @@ def nickParse(nicks, chan='b33r_time')
   lines = []
 
   nicks.each do |n|
+    nick = Regexp.escape(n)
     Dir.glob("log/**/#{chan}.*.log") do |path|
       open(path, 'r:iso-8859-1') do |file|
-        file.grep(/#{chan}\.#{n}:/) do |line|
-          lines << line.gsub(/.*#{chan}\.#{n}:/, '')
+        file.grep(/#{chan}\.#{nick}:/) do |line|
+          lines << line.gsub(/.*#{chan}\.#{nick}:/, '')
         end
       end
     end
