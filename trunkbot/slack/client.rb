@@ -47,7 +47,7 @@ module Trunkbot
       def process_message(msg, user, channel)
         puts "processing: #{channel}.#{user} - #{msg}"
         out = @bot.process(msg)
-        @client.web_client.chat_postMessage channel: channel, text: out
+        @client.web_client.chat_postMessage(channel: channel, text: out, as_user: true)
       end
 
     end
