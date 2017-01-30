@@ -26,6 +26,7 @@ module Trunkbot
       def receive_message(data)
         puts "data: #{data}"
         return if data.subtype == 'bot_message'
+        return if data.user == @client.self.id
 
         input = nil
         if !@client.ims[data.channel].nil?
