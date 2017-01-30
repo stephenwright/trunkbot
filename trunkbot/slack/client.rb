@@ -1,4 +1,5 @@
 require 'slack-ruby-client'
+require 'pp'
 
 module Trunkbot
   module Slack
@@ -9,7 +10,7 @@ module Trunkbot
         @client = ::Slack::RealTime::Client.new
 
         @client.on :hello do
-          puts "Successfully connected, welcome '#{@client.self.name}' to the '#{@client.team.name}' team at https://#{@client.team.domain}.slack.com."
+          puts "Connected '#{@client.self.name}' to '#{@client.team.name}' [https://#{@client.team.domain}.slack.com]."
         end
 
         @client.on :message do |data|
@@ -24,16 +25,28 @@ module Trunkbot
     private
 
       def receive_message(data)
-        puts "data: #{data}"
+        puts "data:"
+        pp data
+
+        # ignore bot message
         return if data.subtype == 'bot_message'
+        # ignore messages posted by self
         return if data.user == @client.self.id
+
+        if data.subtype == 'message_changed'
+          text = data.message.text
+        elsif data.text.nil?
+          return
+        else
+          text = data.text
+        end
 
         input = nil
         if !@client.ims[data.channel].nil?
           #direct message
-          input = data.text
+          input = text
         else
-          msg = ::Slack::Messages::Formatting.unescape(data.text)
+          msg = ::Slack::Messages::Formatting.unescape(text)
           puts "message received: #{msg}"
 
           case msg
