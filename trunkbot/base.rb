@@ -8,5 +8,7 @@ require 'rubygems'
 require 'lib/db'
 
 require 'trunkbot'
+require 'trunkbot/model/image'
 require 'trunkbot/model/irc_message'
 require 'trunkbot/model/note'
+
