@@ -4,7 +4,7 @@ require_relative '../base'
 images = Image.where(private: false).order('random()')
 
 ARGV.each do |tag|
-  images = images.where('tags like ?', "%#{tag}%")
+  images = images.where('tags ilike :q or name ilike :q or file_file_name ilike :q', q: "%#{tag}%")
 end
 
 image = images.first
