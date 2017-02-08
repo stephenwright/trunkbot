@@ -1,13 +1,15 @@
 #!/usr/bin/env ruby
 require_relative '../base'
 
-images = Image.where(private: false).order('random()')
+#ActiveRecord::Base.logger = Logger.new(STDOUT)
+
+images = Image.where(private: false)
 
 ARGV.each do |tag|
   images = images.where('tags ilike :q or name ilike :q or file_file_name ilike :q', q: "%#{tag}%")
 end
 
-image = images.first
+image = images.order('random()').first
 
 if image.present?
   puts "http://trunkbit.com/i/#{image.id}"
