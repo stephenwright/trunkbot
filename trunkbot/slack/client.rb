@@ -25,8 +25,8 @@ module Trunkbot
     private
 
       def receive_message(data)
-        puts "data:"
-        pp data
+        #puts "data:"
+        #pp data
 
         # ignore bot message
         return if data.subtype == 'bot_message'
